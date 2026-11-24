@@ -9,11 +9,16 @@ import os
 
 ENTRY_LETTER = "A"  # A = coffee, B = tea (competition rules)
 
-OUTPUT_PATH = "/output/entry.txt"
+# Output dir is overridable via env for local testing; default is the
+# competition's /output. The file itself is always entry.txt.
+OUTPUT_DIR = os.environ.get("OUTPUT_DIR", "/output")
+OUTPUT_PATH = os.path.join(OUTPUT_DIR, "entry.txt")
 
 
 def main():
-    os.makedirs("/output", exist_ok=True)
+    if len(ENTRY_LETTER) != 1:
+        raise ValueError("entry must be exactly one letter")
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
     with open(OUTPUT_PATH, "w", encoding="utf-8", newline="") as f:
         f.write(ENTRY_LETTER)
     os.chmod(OUTPUT_PATH, 0o644)
